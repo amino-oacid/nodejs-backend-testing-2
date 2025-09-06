@@ -1,4 +1,4 @@
-import { PostsService } from './posts.service';
+import { Post, PostsService } from './posts.service';
 
 describe('PostsService', () => {
   let postsService: PostsService;
@@ -20,13 +20,37 @@ describe('PostsService', () => {
     });
 
     it('should return all posts if called without options', () => {
-      // реализуйте тест-кейс
+      const foundedPosts = postsService.findMany();
+
+      expect(foundedPosts).toEqual(postsService.getAll());
     });
 
     it('should return correct posts for skip and limit options', () => {
-      // реализуйте тест-кейс
+      const skip: number = 1;
+      const limit: number = 2;
+
+      const foundedPosts = postsService.findMany({ skip, limit });
+      const expectedPosts: Post[] = [
+        { id: '2', text: 'Post 2' },
+        { id: '3', text: 'Post 3' },
+      ];
+
+      expect(foundedPosts).toEqual(expectedPosts);
+
     });
 
-    // реализуйте недостающие тест-кейсы
+    it('should delete post', () => {
+        postsService.delete('1');
+
+        const posts = postsService.getAll();
+        expect(posts[0]).toEqual({id: '2', text: 'Post 2'});
+    });
+
+    it('should update post', () => {
+      postsService.update('2', {text: 'updated post'});
+
+      expect(postsService.find('2')?.text).toEqual('updated post');
+    });
+
   });
 });
